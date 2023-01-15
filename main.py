@@ -70,6 +70,7 @@ class MainWindow(QMainWindow):
         navbar.addWidget(self.url_bar)
         navbar.addSeparator()
 
+
         # add icon
         self.setWindowIcon(QIcon('image/icon - 01.png/'))
         # set default Homre page
