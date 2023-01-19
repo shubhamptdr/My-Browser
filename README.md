@@ -10,3 +10,8 @@ Used Python to develop ***My Browser*** a  web browser.
 ## Tech Stack:
 * Python 
 * PyQt5 ( library )
+
+## Video:
+
+https://user-images.githubusercontent.com/117558233/213430552-c2ad0c1b-c292-4d7e-99e7-7a7811de136b.mp4
+
