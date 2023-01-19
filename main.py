@@ -11,17 +11,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        # creating a QWebEngineView
-        # self.browser = QWebEngineView()
-        # # set default url
-        # self.browser.setUrl(QUrl('http://google.com'))
-        # # adding action when url get changed
-        # self.browser.urlChanged.connect(self.update_url)
-        # self.browser.loadFinished.connect(self.update_title)
-        # # set this browser as central widget or main window
-        # self.setWindowIcon(QIcon('image/icon - 01.png/'))
-        # self.setCentralWidget(self.browser)
-        # self.showMaximized()
 
         self.tab = QTabWidget()
         self.tab.setDocumentMode(True)
@@ -29,35 +18,56 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab)
         self.showMaximized()
 
+        # adding double click event listener
         self.tab.tabBarDoubleClicked.connect(self.tab_open_doubleclick)
+        # adding close tab event listener
         self.tab.tabCloseRequested.connect(self.close_tab)
+        # adding action when url get changed
         self.tab.currentChanged.connect(self.current_tab_changed)
 
+        # add menubar
+        file_menu = self.menuBar().addMenu("&File")
+        help_menu = self.menuBar().addMenu("&Help")
 
-        # navigation tool bar
+        new_tab = QAction(QIcon(os.path.join('icon','new tab.png')),'New tab', self)
+        new_tab.setStatusTip('Open new tab')
+        new_tab.triggered.connect(lambda _: self.open_new_tab())
+        file_menu.addAction(new_tab)
+
+        close_tab = QAction(QIcon(os.path.join('icon', 'close.png')), 'Close tab', self)
+        close_tab.setStatusTip('Open new tab')
+        close_tab.triggered.connect(self.close_tab)
+        file_menu.addAction(close_tab)
+
+        back_to_home = QAction(QIcon(os.path.join('icon', 'house-simple.png')), 'Home', self)
+        back_to_home.setStatusTip('Open new tab')
+        back_to_home.triggered.connect(self.navigate_home)
+        help_menu.addAction(back_to_home)
+
+        # navigation toolbar
         navbar = QToolBar()
         self.addToolBar(navbar)
 
         # creating a action for back
-        back_btn = QAction('Back', self)
+        back_btn = QAction(QIcon(os.path.join('icon','caret-left.png')),'Back', self)
         back_btn.setStatusTip('Back to previous page')
         back_btn.triggered.connect(lambda: self.tab.currentWidget().back())
         navbar.addAction(back_btn)
 
         # creating a action for forward
-        forward_btn = QAction('Forward', self)
+        forward_btn = QAction(QIcon(os.path.join('icon','caret-right.png')),'Forward', self)
         forward_btn.setStatusTip('Forward to next page')
         forward_btn.triggered.connect(lambda: self.tab.currentWidget().forward())
         navbar.addAction(forward_btn)
 
         # creating a action for reload
-        reload_btn = QAction('Reload', self)
+        reload_btn = QAction(QIcon(os.path.join('icon','arrow-clockwise.png')),'Reload', self)
         reload_btn.setStatusTip('Reload')
         reload_btn.triggered.connect(lambda: self.tab.currentWidget().reload())
         navbar.addAction(reload_btn)
 
         # creating a action for home
-        home_btn = QAction('Home', self)
+        home_btn = QAction(QIcon(os.path.join('icon','house-simple.png')),'Home', self)
         home_btn.setStatusTip('Go home')
         home_btn.triggered.connect(self.navigate_home)
         navbar.addAction(home_btn)
@@ -68,12 +78,24 @@ class MainWindow(QMainWindow):
         self.url_bar = QLineEdit()
         self.url_bar.returnPressed.connect(self.navigate_to_url)
         navbar.addWidget(self.url_bar)
+        # adding a separator in the toolbar
         navbar.addSeparator()
 
 
+        # add style
+        self.setStyleSheet("""
+                                QLineEdit {
+                                    border: 1px solid #868e96;
+                                    border-radius: 10px;
+                                    padding: 5px;
+                                    font-size: 16px;
+                                }
+                                """)
+
+
         # add icon
-        self.setWindowIcon(QIcon('image/icon - 01.png/'))
-        # set default Homre page
+        self.setWindowIcon(QIcon(os.path.join('icon','icon 01.png')))
+        # set default Home page
         self.open_new_tab(QUrl('http://google.com'),'Home')
 
 
@@ -132,6 +154,7 @@ class MainWindow(QMainWindow):
 
         title = self.tab.currentWidget().page().title()
         self.setWindowTitle(title)
+
 
 if __name__ == '__main__':
     # creating a pyQt5 application
